@@ -4,7 +4,7 @@ MALDIquantReport versión alfa: 1
 
 Laboratorio de Análisis Bioquímico e Instrumental
 
-CINVESTAV-Irapuato, UGA-LANGEBIO
+Tecnológico Nacional de México campus Celaya, CINVESTAV-Irapuato, UGA-LANGEBIO
 
 Héctor Guillén-Alonso, Francisco Villaseñor Ortega & Robert Winkler
 
