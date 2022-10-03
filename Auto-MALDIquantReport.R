@@ -8,7 +8,7 @@ autoMALDIquantReport <- function () {
   rawData  <- suppressWarnings(spectra.load())  # Load and mean of microscans per spectra
   settings <- spectra.plot(rawData, settings) # Firs spectra
   importedDataPlot <- recordPlot()
-  message <- paste0("Insert a number between 1 and ", length(rawData$spectraList), " for plot another spectra, type c to continue with the workflow")
+  message <- paste0("Type a number between 1 and ", length(rawData$spectraList), " to plot another spectrum; type c to continue with the workflow")
   settings <- spectra.plot.loop(rawData, settings, message)
   processedData <- spectra.varianceStabilization(rawData, settings)
   rawData <- list(spectraList = processedData$spectraList, metadata = processedData$metadata)
