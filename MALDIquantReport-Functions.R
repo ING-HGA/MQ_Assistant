@@ -34,7 +34,7 @@ packages.version <- list(MALDIquant = packageVersion("MALDIquant"),
 # *************************************************************************
 #Ask to the user if he want to load their settings
 loadUserSettings <- function(){
-  loadSettings <- console.read("Do you want to load your settings (Yes to load settings, any other key to use defauls)")
+  loadSettings <- console.read("Type Yes to load settings; type any other key to use defaults")
   if (loadSettings == "Yes"|| loadSettings =="y"| loadSettings == "yes"| 
       loadSettings =="YES"| loadSettings =="Y") {
     settingsFile <- console.read("File name")
@@ -91,7 +91,7 @@ spectra.load <- function() {
   emptyData <- any(sapply(rawData, isEmpty))
   
   if (emptyData == TRUE){
-    print("Thre is at least one empty spectra")
+    print("There is at least one empty spectrum")
   }
   
   return(list(spectraList=rawData, metadata=metaData))
@@ -164,7 +164,7 @@ input.is.on.range <- function (input, objectToRange) {
     warningToUser <- TRUE
     success       <- TRUE
     
-    message ("Warning: You type a number out of range, the last spectrum was plotted" )
+    message ("Warning: Typed number is out of range. Closest spectrum was ploted" )
     return(list(input = input, warningToUser = warningToUser, success = success))
     
     
@@ -243,7 +243,7 @@ spectra.varianceStabilization <- function(spectraData, settings){
   plot(spectraData$spectraList[[settings$spectraToPlot]], main = spectraData$metadata[[settings$spectraToPlot]])
   lines(mass(tempTransformedSpectra[[1]]),intensity(tempTransformedSpectra[[1]]), col = "red")
   
-  consoleValue           <- console.read("Type a nomber for previw of variance Stabilization on spectra, type c to apply and continue or s to skip step")
+  consoleValue           <- console.read("Type a nomber to previw variance stabilization on spectra; type c to apply and continue; or s to skip step")
   
   if(input.is.numeric(consoleValue)$success){
     newPlot <- TRUE
@@ -254,7 +254,7 @@ spectra.varianceStabilization <- function(spectraData, settings){
       
       plot(spectraData$spectraList[[as.numeric(input.is.on.range(consoleValue, spectraData$spectraList)$input)]], main = spectraData$metadata[as.numeric(input.is.on.range(consoleValue, spectraData$spectraList)$input)])
       lines(mass(tempTransformedSpectra[[1]]), intensity(tempTransformedSpectra[[1]]), col = "red")
-      consoleValue <- console.read("Type a nomber for previw of variance Stabilization on spectra, type c to apply and continue or s to skip step")
+      consoleValue <- console.read("Type a nomber to previw variance stabilization on spectra; type c to apply and continue; or s to skip step")
       if(input.is.numeric(consoleValue)$success == FALSE){
         newPlot <- FALSE
       }
@@ -285,7 +285,7 @@ spectra.smoothing <- function(spectraData, settings) {
   plot(spectraData$spectraList[[settings$spectraToPlot]], main = spectraData$metadata[[settings$spectraToPlot]])
   lines(mass(tempTransformedSpectra[[1]]),intensity(tempTransformedSpectra[[1]]), col = "red")
   
-  consoleValue           <- console.read("Type a nomber for previw of Smoothing on spectra, type c to apply and continue or s to skip step")
+  consoleValue           <- console.read("Type a nomber to previw of smoothing on spectra; type c to apply and continue; or s to skip step")
   
   if(input.is.numeric(consoleValue)$success){
     newPlot <- TRUE
@@ -296,7 +296,7 @@ spectra.smoothing <- function(spectraData, settings) {
       
       plot(spectraData$spectraList[[as.numeric(input.is.on.range(consoleValue, spectraData$spectraList)$input)]], main = spectraData$metadata[as.numeric(input.is.on.range(consoleValue, spectraData$spectraList)$input)])
       lines(mass(tempTransformedSpectra[[1]]), intensity(tempTransformedSpectra[[1]]), col = "red")
-      consoleValue <- console.read("Type a nomber for previw of Smoothing on spectra, type c to apply and continue or s to skip step")
+      consoleValue <- console.read("Type a nomber to previw of smoothing on spectra; type c to apply and continue; or s to skip step")
       
       if (input.is.numeric(consoleValue)$success == FALSE) {
         
@@ -345,7 +345,7 @@ spectra.baseLineCorrection <- function(spectraData, settings){
   
   while (newPlotIterations) {
     
-    consoleValueIteration<-console.read("Type a nomber of iterations for previw of base line correction on actual spectra, type c to apply and continue, p to change spectra preview or s to skip step")
+    consoleValueIteration<-console.read("Type a number of iterations to generate and preview baseline correction on the actual spectrum; type c to apply and continue; p to change the preview of spectrum, or s to skip step")
     
     if (input.is.numeric(consoleValueIteration)$succes){
       
@@ -381,7 +381,7 @@ spectra.baseLineCorrection <- function(spectraData, settings){
       
       while (newPlot) {
         
-        consoleValue <- console.read("Type a nomber for previw base line correction on different spectra, type c to apply and continue, i to change iterations or s to skip step")
+        consoleValue <- console.read("Type a number of iterations to generate and preview baseline correction on the actual spectrum; type c to apply and continue; p to change the preview of spectrum, or s to skip step")
         
         if (input.is.numeric(consoleValue)$succes){
           
@@ -444,7 +444,7 @@ spectra.normalization <- function (spectraData, settings) {
   
   while (newPlot) {
     
-    consoleValue<-console.read("Type a nomber of spectra for previw of normalization on that spectra, type c to apply and continue or s to skip step")
+    consoleValue<-console.read("Type a number to preview normalization on that spectrum; type c to apply and continue, or s to skip step")
     
     if (input.is.numeric(consoleValue)$succes){
       
@@ -497,7 +497,7 @@ spectra.alignment <- function (spectraData, settings) {
   
   while (newPlot) {
     
-    consoleValue<-console.read("Type a nomber of spectra for previw of alignment on that spectra, type c to apply and continue or s to skip step")
+    consoleValue<-console.read("Type a number to preview alignment on that spectrum; type c to apply and continue, or s to skip step")
     
     if (input.is.numeric(consoleValue)$succes){
       
@@ -549,7 +549,7 @@ spectra.signalToNoise    <- function(spectraData, settings){
   
   while (NewPlotSN) {
     
-    consoleValueSN<-console.read("Type a nomber of signal to noise ratio for previw peak peaking on actual spectra, type c to apply and continue, p to change spectra preview or s to skip step")
+    consoleValueSN<-console.read("Type a number of signal-to-noise ratio to preview peak peaking on actual spectrum; type c to apply and continue; p to change spectra preview, or s to skip step")
     
     if (input.is.numeric(consoleValueSN)$succes){
       
@@ -588,7 +588,7 @@ spectra.signalToNoise    <- function(spectraData, settings){
       
       while (newPlot) {
         
-        consoleValue <- console.read("Type a nomber for previw peak peaking on different spectra, type c to apply and continue, i to change iterations or s to skip step")
+        consoleValue <- console.read("Type a number for preview peak peaking on different spectrum; type c to apply and continue; i to change iterations, or s to skip step")
         
         if (input.is.numeric(consoleValue)$succes){
           
@@ -647,7 +647,7 @@ spectra.mode <- function(rawData, settings, peaks, noise){
   
   while (newPlot == TRUE) {
     
-    message              <- "Chose number of spectra to compare between profile and centroid matrix creation mode, type p to chose profile or c for centroid"
+    message              <- "Chose the number of spectrum to compare between profile and centroid matrix creation mode; type p to choose a profile, or c for centroid"
     numberOfPlot         <- settings$spectraToPlot
     settings$spectraMode <- NULL
     intensityesProfile   <- intensity(rawData$spectraList[[settings$spectraToPlot]]) - as.numeric(noise[[settings$spectraToPlot]])
@@ -713,18 +713,18 @@ spectra.featureMatrix.centroid <- function(spectraData, peaks, settings){
   
   while (NewPlotFreq) {
     
-    consoleValueFreq<-console.read("Type a nomber of minimum of frequency of peaks on all spectra to be considered (0-1) for previw peak peaking on actual spectra, type c to apply and continue, p to change spectra preview or s to skip step")
+    consoleValueFreq<-console.read("Type a number between 0 and 1 for a minimum frequency of peaks on all spectra to be considered; type c to apply and continue; i to change iterations, or s to skip step")
     
     if (input.is.numeric(consoleValueFreq)$succes){
       
       if (consoleValueFreq < 0){
         consoleValueFreq <- 0
-        warning("You insert a number out of range, it was adjusted to min of the range (0)")
+        warning("You inserted a number out of range, it was adjusted to a minimum of the range (0)")
       }
       
       if (consoleValueFreq > 1){
         consoleValueFreq <- 1
-        warning("You insert a number out of range, it was adjusted to max of the range (1)")
+        warning("You inserted a number out of range, it was adjusted to the maximum of the range (1)")
       }
       
       settings$minFreqPeaks <- as.numeric(consoleValueFreq)
@@ -764,7 +764,7 @@ spectra.featureMatrix.centroid <- function(spectraData, peaks, settings){
       
       while (newPlot) {
         
-        consoleValue <- console.read("Type a nomber of minimum of frequency of peaks on all spectra to be considered (0-1) on different spectra, type c to apply and continue, i to change iterations or s to skip step")
+        consoleValue <- console.read("Type a number between 0 and 1 for a minimum frequency of peaks on all spectra to be considered; type c to apply and continue; i to change iterations, or s to skip step")
         
         if (input.is.numeric(consoleValue)$succes){
           
@@ -859,7 +859,7 @@ featureMatrix.adjust.resolution <-  function(featureMatrix, settings) {
   
   while (newPlot) {
     
-    resolution <- console.read("Insert new mass resolution, type c to apply and continue or s to skip")
+    resolution <- console.read("Insert new mass resolution; type c to apply and continue, or s to skip")
     
     if (input.is.numeric(resolution)$succes){
       
