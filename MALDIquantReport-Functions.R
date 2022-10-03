@@ -243,7 +243,7 @@ spectra.varianceStabilization <- function(spectraData, settings){
   plot(spectraData$spectraList[[settings$spectraToPlot]], main = spectraData$metadata[[settings$spectraToPlot]])
   lines(mass(tempTransformedSpectra[[1]]),intensity(tempTransformedSpectra[[1]]), col = "red")
   
-  consoleValue           <- console.read("Type a nomber to previw variance stabilization on spectra; type c to apply and continue; or s to skip step")
+  consoleValue           <- console.read("Type a number to preview variance stabilization on spectra; type c to apply and continue; or s to skip step")
   
   if(input.is.numeric(consoleValue)$success){
     newPlot <- TRUE
@@ -254,7 +254,7 @@ spectra.varianceStabilization <- function(spectraData, settings){
       
       plot(spectraData$spectraList[[as.numeric(input.is.on.range(consoleValue, spectraData$spectraList)$input)]], main = spectraData$metadata[as.numeric(input.is.on.range(consoleValue, spectraData$spectraList)$input)])
       lines(mass(tempTransformedSpectra[[1]]), intensity(tempTransformedSpectra[[1]]), col = "red")
-      consoleValue <- console.read("Type a nomber to previw variance stabilization on spectra; type c to apply and continue; or s to skip step")
+      consoleValue <- console.read("Type a number to preview variance stabilization on spectra; type c to apply and continue; or s to skip step")
       if(input.is.numeric(consoleValue)$success == FALSE){
         newPlot <- FALSE
       }
@@ -285,7 +285,7 @@ spectra.smoothing <- function(spectraData, settings) {
   plot(spectraData$spectraList[[settings$spectraToPlot]], main = spectraData$metadata[[settings$spectraToPlot]])
   lines(mass(tempTransformedSpectra[[1]]),intensity(tempTransformedSpectra[[1]]), col = "red")
   
-  consoleValue           <- console.read("Type a nomber to previw of smoothing on spectra; type c to apply and continue; or s to skip step")
+  consoleValue           <- console.read("Type a number to preview smoothing on spectra; type c to apply and continue, or s to skip step")
   
   if(input.is.numeric(consoleValue)$success){
     newPlot <- TRUE
@@ -296,7 +296,7 @@ spectra.smoothing <- function(spectraData, settings) {
       
       plot(spectraData$spectraList[[as.numeric(input.is.on.range(consoleValue, spectraData$spectraList)$input)]], main = spectraData$metadata[as.numeric(input.is.on.range(consoleValue, spectraData$spectraList)$input)])
       lines(mass(tempTransformedSpectra[[1]]), intensity(tempTransformedSpectra[[1]]), col = "red")
-      consoleValue <- console.read("Type a nomber to previw of smoothing on spectra; type c to apply and continue; or s to skip step")
+      consoleValue <- console.read("Type a number to preview smoothing on spectra; type c to apply and continue, or s to skip step")
       
       if (input.is.numeric(consoleValue)$success == FALSE) {
         
