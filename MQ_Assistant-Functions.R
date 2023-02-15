@@ -336,7 +336,7 @@ spectra.smoothing <- function(spectraData, settings) {
 # *************************************************************************
 
 spectra.baseLineCorrection <- function(spectraData, settings){
-  print("Base Line")
+  print("Baseline")
   settingsBackUp         <- settings
   newPlotIterations      <- TRUE
   tempTransformedSpectra <- estimateBaseline(spectraData$spectraList[settings$spectraToPlot][[1]], method=settings$baseLineMethod, iterations = settings$iterations)
@@ -432,8 +432,9 @@ spectra.baseLineCorrection <- function(spectraData, settings){
 #                      INTENSITY CALIBRATION/NORMALIZATION
 # Preview normalization
 # *************************************************************************
-
 spectra.normalization <- function (spectraData, settings) {
+  
+  print("Normalization")
   
   settingsBackUp         <- settings
   newPlot                <- TRUE
@@ -487,6 +488,8 @@ spectra.normalization <- function (spectraData, settings) {
 
 spectra.alignment <- function (spectraData, settings) {
   
+  print("Alignment")
+  
   settingsBackUp         <- settings
   newPlot                <- TRUE
   tempTransformedSpectra <- alignSpectra(spectraData$spectraList, warpingMethod = settings$warpingMethod, halfWindowSize = settings$halfWindowSize,
@@ -538,6 +541,9 @@ spectra.alignment <- function (spectraData, settings) {
 # *************************************************************************
 
 spectra.signalToNoise    <- function(spectraData, settings){
+  
+  print("Signal to noise")
+  
   settingsBackUp         <- settings
   NewPlotSN              <- TRUE
   peaks                  <- NULL
@@ -546,6 +552,7 @@ spectra.signalToNoise    <- function(spectraData, settings){
   plot(spectraData$spectraList[[settings$spectraToPlot]], main = spectraData$metadata[[settings$spectraToPlot]])
   lines(noise[,1], noise[, 2]*2, col = rgb(red = 0, green = 0, blue = 1, alpha = 0.5), lwd = 2)
   lines(noise[,1], noise[, 2]*3, col = rgb(red = 1, green = 0, blue = 0, alpha = 0.5), lwd = 2)
+  legend("topright", inset = .01, legend = c("s/n = 3", "s/n = 2"), col = c("red", "blue"), lty = 1)
   
   while (NewPlotSN) {
     
@@ -642,6 +649,9 @@ spectra.signalToNoise    <- function(spectraData, settings){
 # *************************************************************************
 
 spectra.mode <- function(rawData, settings, peaks, noise){
+  
+  print("Profile or centroid")
+  
   newPlot <- TRUE
   matrix  <- NULL
   
@@ -846,12 +856,14 @@ spectra.featureMatrix.profile <- function(spectraData, settings, noise){
 
 
 # *************************************************************************
-#                        MASS RESOLUTION IN MATRIX
+#                 MASS RESOLUTION IN MATRIX and ROW NAMES
 # Create a loop to ask to the user for mass resolution according with their
 # equipment
 # *************************************************************************
 
 featureMatrix.adjust.resolution <-  function(featureMatrix, settings) {
+  
+  print("Number of significant digits")
   
   settingsBackUp <- settings
   newResolution  <- NULL
@@ -859,7 +871,7 @@ featureMatrix.adjust.resolution <-  function(featureMatrix, settings) {
   
   while (newPlot) {
     
-    resolution <- console.read("Insert new mass resolution; type c to apply and continue, or s to skip")
+    resolution <- console.read("Insert new mass accuracy (number of significant digits): type c to apply and continue, or s to skip")
     
     if (input.is.numeric(resolution)$succes){
       
@@ -900,3 +912,122 @@ featureMatrix.adjust.resolution <-  function(featureMatrix, settings) {
   return(list(featureMatrix = featureMatrix, settings = settings))
 
 }
+
+# *************************************************************************
+#                        MATRIX FORMAT
+# Add row names and columns with metadata
+# 
+# *************************************************************************
+
+
+
+ format.matrix <- function(featureMatrix, settings) {
+  
+   # Rownames
+   
+   rowNames                <- list.files()
+   rowNames                <- gsub(".mzML", "", rowNames)
+   rownames(featureMatrix) <- rowNames
+   actualWD                <- getwd()
+   
+   # Add metadata to de matrix
+   
+   setwd(file.path(path.expand('~'),'Desktop'))
+   
+   if(any(list.files()=="Metadata.csv")){
+     metadataMatrix <- matrix(ncol = (lengths(regmatches(rowNames[1], gregexpr("_", rowNames[1])))+1), nrow = nrow(featureMatrix))
+     
+     for (i in 1:nrow(metadataMatrix)) {
+       
+       tempMetaData <- strsplit(rowNames[i], "_")
+       
+       for (j in 1:ncol(metadataMatrix)) {
+         
+         metadataMatrix[i,j] <- tempMetaData[[1]][j]
+         
+       }
+       
+     }
+     
+     # Give colnames from CSV file
+     
+     metadataColNames         <- read.csv("Metadata.csv", header = FALSE)
+     colnames(metadataMatrix) <- metadataColNames
+     featureMatrix            <- cbind(metadataMatrix, featureMatrix)
+   }
+   
+   setwd(actualWD)
+   
+   return(list(featureMatrix = featureMatrix, settings = settings))
+   
+ }
+ 
+ 
+ 
+ 
+
+
+# *************************************************************************
+#               Export feature matrix to CSV
+# If necessary Create a new folder in the desktop and
+# Automatically export feature matrix to a CSV file
+# *************************************************************************
+
+export.matrix <- function () {
+  
+  actualWD <- getwd()
+  
+  setwd(file.path(path.expand('~'),'Desktop'))
+  
+  if (any(list.files () == "Exported")) {
+    setwd(file.path(path.expand('~'),'Desktop/Exported'))
+    write.csv(pretreatment$featureMatrix, file = "FeatureMatrix.csv")
+  } else {
+    dir.create("Exported")
+    setwd(file.path(path.expand('~'),'Desktop/Exported'))
+    write.csv(pretreatment$featureMatrix, file = "FeatureMatrix.csv")
+  }
+  
+  setwd(actualWD)
+  print("Feature matrix has been exported")
+  
+}
+
+# *************************************************************************
+#                       Export settings to CSV
+# If necessary Create a new folder in the desktop and
+# Automatically export feature matrix to a CSV file
+# *************************************************************************
+
+export.settings <- function () {
+  
+  actualWD <- getwd()
+  settings <- as.matrix(pretreatment$settings)
+  colnames(settings) <- "Value"
+  
+  setwd(file.path(path.expand('~'),'Desktop'))
+  
+  if (any(list.files () == "Exported")) {
+    setwd(file.path(path.expand('~'),'Desktop/Exported'))
+    write.csv(settings, file = "Settings.csv")
+  } else {
+    dir.create("Exported")
+    setwd(file.path(path.expand('~'),'Desktop/Exported'))
+    write.csv(settings, file = "Settings.csv")
+  }
+  
+  setwd(actualWD)
+  print("Settings has been exported")
+  
+}
+
+# *************************************************************************
+#               Export feature matrix and settings to CSV
+# If necessary Create a new folder in the desktop and
+# Automatically export feature matrix to a CSV file
+# *************************************************************************
+export.all <- function() {
+  export.matrix()
+  export.settings()
+}
+

@@ -1,5 +1,5 @@
 # Set working directory with spectra
-setwd("~/Nextcloud/agraphia (3)/projects/Hector/Scrips R/MQ_Assistant/Dataset")
+setwd("~/Nextcloud/agraphia (3)/projects/Hector/Scrips R/MQ_Assistant/Dataset/Data")
 
 ### Load file with functions:###
 
@@ -10,4 +10,5 @@ source("~/Nextcloud/agraphia (3)/projects/Hector/Scrips R/MQ_Assistant/Auto_MQ_A
 
 ### Run ###
 # Execute MALDIquant workflow automatically and save data matrix and settings at the end
-featureMatrix <- autoMCAssistant()
+pretreatment <- autoMCAssistant()
+

@@ -35,5 +35,8 @@ autoMCAssistant <- function () {
   processedData <- featureMatrix.adjust.resolution(featureMatrix, settings)
   featureMatrix <- processedData$featureMatrix
   settings <- processedData$settings
+  processedData <- format.matrix(featureMatrix, settings)
+  featureMatrix <- processedData$featureMatrix
+  settings <- processedData$settings
   return(list(featureMatrix = featureMatrix, settings = settings))
 }
