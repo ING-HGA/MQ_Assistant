@@ -46,12 +46,12 @@ loadUserSettings <- function(){
   # Determinate if settings will be create or load
   if (loadSettings == FALSE) {
     # Create settings
-    settings <- list(tolerance = 0.002, halfWindowSize = 10, SNR = 2, minFrequency = 0, resolution = 2,
+    settings <- list(tolerance = 0.2, halfWindowSize = 5, SNR = 3, minFrequency = 0, resolution = 0.2,
                      smoodIntensityMethod = "SavitzkyGolay", calibrateIntensitiesMethod = "TIC",
                      warpingMethod = "lowess", detectPeacksMethod = "MAD", spectraToPlot = NULL, firstPlot = TRUE, 
                      varianceStabilization = NULL, smoothing = NULL, baseLineMethod = "SNIP", iterations = 100, baseLine = NULL, 
                      calibrationMethod = "TIC", calibration = NULL, warpingMethod = "lowess", warping = NULL, S2N = 3, peakDetectionMethod = "MAD", 
-                     peakDetection = NULL, featureMatrix = NULL, massRound = NULL, minFreqPeaks = 0.25, freqPeaks = NULL, spectraMode = NULL)
+                     peakDetection = NULL, featureMatrix = NULL, massRound = NULL, minFreqPeaks = 0.5, freqPeaks = NULL, spectraMode = NULL)
   } else {
     #Load settings
     settings.csv <- read.csv(settingsFile)
@@ -930,9 +930,16 @@ featureMatrix.adjust.resolution <-  function(featureMatrix, settings) {
    rownames(featureMatrix) <- rowNames
    actualWD                <- getwd()
    
+   if (Sys.info()["sysname"] == "Windows") {
+     desktopWD <- desktopWD
+   } else {
+     desktopWD <- file.path(path.expand('~'),'Desktop')
+   }
+   
+   
    # Add metadata to de matrix
    
-   setwd(file.path(path.expand('~'),'Desktop'))
+   setwd(desktopWD)
    
    if(any(list.files()=="Metadata.csv")){
      metadataMatrix <- matrix(ncol = (lengths(regmatches(rowNames[1], gregexpr("_", rowNames[1])))+1), nrow = nrow(featureMatrix))
@@ -975,9 +982,15 @@ featureMatrix.adjust.resolution <-  function(featureMatrix, settings) {
 
 export.matrix <- function () {
   
-  actualWD <- getwd()
+  actualWD  <- getwd()
   
-  setwd(file.path(path.expand('~'),'Desktop'))
+  if (Sys.info()["sysname"] == "Windows") {
+    desktopWD <- paste("C:/Users",Sys.info()["user"],"Desktop", sep = "/")
+  } else {
+    desktopWD <- file.path(path.expand('~'),'Desktop')
+  }
+  
+  setwd(desktopWD)
   
   if (any(list.files () == "Exported")) {
     setwd(file.path(path.expand('~'),'Desktop/Exported'))
@@ -1005,8 +1018,13 @@ export.settings <- function () {
   settings <- as.matrix(pretreatment$settings)
   colnames(settings) <- "Value"
   
-  setwd(file.path(path.expand('~'),'Desktop'))
+  if (Sys.info()["sysname"] == "Windows") {
+    desktopWD <- paste("C:/Users",Sys.info()["user"],"Desktop", sep = "/")
+  } else {
+    desktopWD <- file.path(path.expand('~'),'Desktop')
+  }
   
+  setwd(desktopWD)
   if (any(list.files () == "Exported")) {
     setwd(file.path(path.expand('~'),'Desktop/Exported'))
     write.csv(settings, file = "Settings.csv")
