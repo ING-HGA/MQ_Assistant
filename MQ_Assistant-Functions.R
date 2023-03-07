@@ -51,7 +51,8 @@ loadUserSettings <- function(){
                      warpingMethod = "lowess", detectPeacksMethod = "MAD", spectraToPlot = NULL, firstPlot = TRUE, 
                      varianceStabilization = NULL, smoothing = NULL, baseLineMethod = "SNIP", iterations = 100, baseLine = NULL, 
                      calibrationMethod = "TIC", calibration = NULL, warpingMethod = "lowess", warping = NULL, S2N = 3, peakDetectionMethod = "MAD", 
-                     peakDetection = NULL, featureMatrix = NULL, massRound = NULL, minFreqPeaks = 0.5, freqPeaks = NULL, spectraMode = NULL)
+                     peakDetection = NULL, featureMatrix = NULL, massRound = NULL, minFreqPeaks = 0.5, freqPeaks = NULL, spectraMode = NULL, 
+                     metadataCols = NULL)
   } else {
     #Load settings
     settings.csv <- read.csv(settingsFile)
@@ -64,7 +65,7 @@ loadUserSettings <- function(){
                      warpingMethod = settings.csv$warping, S2N = settings.csv$S2N, peakDetectionMethod = settings.csv$peakDetectionMethod,
                      minFreqPeaks = settings.csv$minFreqPeaks,
                      spectraToPlot = NULL, firstPlot = TRUE, varianceStabilization = NULL, smoothing = NULL, baseLine = NULL, calibration = NULL, 
-                     warping = NULL, peakDetection = NULL, featureMatrix = NULL, freqPeaks = NULL, massRound = NULL, spectraMode = NULL)
+                     warping = NULL, peakDetection = NULL, featureMatrix = NULL, freqPeaks = NULL, massRound = NULL, spectraMode = NULL, metadataCols = NULL)
   }
   return(settings)
 }
@@ -878,7 +879,7 @@ featureMatrix.adjust.resolution <-  function(featureMatrix, settings) {
       newResolution <- resolution
       masses        <- round(as.numeric(colnames(featureMatrix)),as.numeric(resolution))
       
-      print("Masses will be roud to:")
+      print("Masses will be round to:")
       print(masses)
       
     } else {
@@ -959,6 +960,7 @@ featureMatrix.adjust.resolution <-  function(featureMatrix, settings) {
      # Give colnames from CSV file
      
      metadataColNames         <- read.csv("Metadata.csv", header = FALSE)
+     settings$metadataCols    <- ncol(metadataColNames)
      colnames(metadataMatrix) <- metadataColNames
      featureMatrix            <- cbind(metadataMatrix, featureMatrix)
    }
@@ -1039,13 +1041,59 @@ export.settings <- function () {
   
 }
 
+
+# *************************************************************************
+#           Export feature Matrix and metadata for Metaboanalist
+# If necessary Create a new folder in the desktop and
+# Automatically export feature matrix to a CSV file
+# *************************************************************************
+
+export.MetaboAnalyst <- function () {
+  
+  actualWD                    <- getwd()
+  featureMatrix               <- as.matrix(pretreatment$featureMatrix)
+  ionMatrix                   <- featureMatrix[,-(1:pretreatment$settings$metadataCols)]
+  metadataMatrix              <- cbind(rownames(featureMatrix),featureMatrix[,(1:pretreatment$settings$metadataCols)])
+  colnames(metadataMatrix)[1] <- "Subject"
+  rownames(metadataMatrix)    <-  NULL
+  rownames(ionMatrix)         <-  NULL
+  
+  
+  if (Sys.info()["sysname"] == "Windows") {
+    desktopWD <- paste("C:/Users",Sys.info()["user"],"Desktop", sep = "/")
+  } else {
+    desktopWD <- file.path(path.expand('~'),'Desktop')
+  }
+  
+  setwd(desktopWD)
+  if (any(list.files () == "Exported")) {
+    setwd(file.path(path.expand('~'),'Desktop/Exported'))
+    write.csv(metadataMatrix, file = "Metadata matrix.csv")
+    write.csv(ionMatrix, file = "Ion matrix.csv")
+  } else {
+    dir.create("Exported")
+    setwd(file.path(path.expand('~'),'Desktop/Exported'))
+    write.csv(metadataMatrix, file = "Metadata matrix.csv")
+    write.csv(ionMatrix, file = "Ion matrix.csv")
+  }
+  
+  setwd(actualWD)
+  print("Ion matrix and Metadata for Metaboanalyst has been exported")
+  print("Output files: Ion matrix.csv and Metadata matrix.csv")
+  
+}
+
 # *************************************************************************
 #               Export feature matrix and settings to CSV
 # If necessary Create a new folder in the desktop and
 # Automatically export feature matrix to a CSV file
+# Feature Matrix and metadata for Metaboanalist
 # *************************************************************************
 export.all <- function() {
   export.matrix()
   export.settings()
+  export.MetaboAnalyst()
 }
+
+
 
