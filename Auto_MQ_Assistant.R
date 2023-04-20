@@ -3,7 +3,7 @@
 # A function to autorun the software
 # *************************************************************************
 
-autoMCAssistant <- function () {
+autoMQAssistant <- function () {
   settings <- loadUserSettings() # Load or create user settings
   rawData  <- suppressWarnings(spectra.load())  # Load and mean of microscans per spectra
   settings <- spectra.plot(rawData, settings) # Firs spectra
