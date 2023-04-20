@@ -14,5 +14,5 @@ desktopWD <- "/Users/hectorguillenalonso/Desktop"
 
 ### Run ###
 # Execute MALDIquant workflow automatically and save data matrix and settings at the end
-pretreatment <- autoMCAssistant()
+pretreatment <- autoMQAssistant()
  
