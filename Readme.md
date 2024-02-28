@@ -6,7 +6,7 @@ Laboratorio de Análisis Bioquímico e Instrumental
 
 Tecnológico Nacional de México campus Celaya, CINVESTAV-Irapuato, UGA-LANGEBIO
 
-Héctor Guillén-Alonso, Francisco Villaseñor Ortega & Robert Winkler
+Héctor Guillén-Alonso, Nancy Shirley García-Rojas, Francisco Villaseñor Ortega & Robert Winkler
 
 MALDIquantReport will be an r-package for visual analysis and automatic report of mass spectra files in mzML format, based on MALDIquant workflow.
 
